@@ -1,5 +1,5 @@
 import java.util.*;
-public class Solution {
+public class Solution{
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		int T = sc.nextInt();
@@ -13,19 +13,27 @@ public class Solution {
 				}
 			}
 			int ans = 0;
+			int [] dx = {-1,1,0,0};
+			int [] dy = {0,0,-1,1};
+			int [] dcr = {-1, 1, -1, 1 };
+			int [] dcc = {-1, 1, 1, -1 };
 			for(int row=0; row<N; row++) {
 				for(int col=0; col<N; col++) {
 					int lineTotal = matrix[row][col];
 					int crossTotal = matrix[row][col];
-					for(int i=1; i<M; i++) {
-						if(0<=row-i) lineTotal += matrix[row-i][col];
-						if(row+i<N) lineTotal += matrix[row+i][col];
-						if(0<=col-i) lineTotal += matrix[row][col-i];
-						if(col+i<N) lineTotal += matrix[row][col+i];
-						if(0<=row-i && 0<=col-i) crossTotal += matrix[row-i][col-i];
-						if(0<=row-i && col+i<N) crossTotal += matrix[row-i][col+i];
-						if(row+i<N && 0<=col-i) crossTotal += matrix[row+i][col-i];
-						if(row+i<N && col+i<N) crossTotal += matrix[row+i][col+i];
+					for(int m=1; m<M; m++) {
+						for(int d=0; d<4; d++) {
+							int nr = row + dx[d] * m;
+					        int nc = col + dy[d] * m;
+							if(0<=nr && nr<N && 0<=nc && nc <N) {
+								lineTotal += matrix[nr][nc];
+							}
+							int ncr = row + dcr[d] * m;
+					        int ncc = col + dcc[d] * m;
+							if(0<=ncr && ncr<N && 0<=ncc && ncc<N) {
+								crossTotal += matrix[ncr][ncc];
+							}
+						}
 					}
 					ans = Math.max(ans, Math.max(lineTotal, crossTotal));
 				}
@@ -33,5 +41,4 @@ public class Solution {
 			System.out.println("#"+tc+" "+ans);
 		}
 	}
-
 }
