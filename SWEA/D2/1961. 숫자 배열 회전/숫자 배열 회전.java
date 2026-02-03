@@ -41,9 +41,9 @@ public class Solution {
         		for(int col=0; col<N; col++) {
         			sb.append(matrix270[row][col]);
         		}
-        		if (row < N - 1) sb.append("\n");
+        		sb.append("\n");
         	}
-            System.out.println(sb.toString());
+            System.out.print(sb.toString());
         }
     }
 
