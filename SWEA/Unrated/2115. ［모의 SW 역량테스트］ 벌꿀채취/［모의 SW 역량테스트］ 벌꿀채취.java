@@ -52,12 +52,12 @@ public class Solution {
 		// TODO Auto-generated method stub
 		powSum = Integer.MIN_VALUE;
 		
-		comb(i, i, 0, 0, i+M);
+		subset(i, 0, 0, i+M);
 		
 		return powSum;
 	}
 	
-	private static void comb(int k, int s, int sum, int powSumF, int F) {
+	private static void subset(int idx, int sum, int powSumF, int F) {
 		if(sum > C) {
 			return;
 		}
@@ -66,10 +66,9 @@ public class Solution {
 	        powSum = powSumF;
 	    }
 
-	    if (k == F) return;
+	    if (idx == F) return;
 		
-		for(int i=s; i<F; i++) {
-			comb(k+1, i+1, sum+list[i], powSumF+list[i]*list[i], F);
-		}
+		subset(idx+1, sum+list[idx], powSumF+list[idx]*list[idx], F);
+		subset(idx+1, sum, powSumF, F);
 	} 
 }
