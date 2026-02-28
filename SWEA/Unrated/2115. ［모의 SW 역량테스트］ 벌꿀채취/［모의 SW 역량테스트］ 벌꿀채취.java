@@ -1,91 +1,75 @@
 import java.util.*;
 
 public class Solution {
-	static int N; static int M;
-	static int C;
-	static int Amax; static int Bmax; static int finalMax;
-	static int [][] matrix;
-	static class Node {
-		int r,c;
-		Node(int r, int c){
-			this.r = r; this.c= c;
-		}
+	static int N, M, C, powSum, max;
+	static int [] list, calList;
+    public static void main(String args[]) throws Exception {
+        Scanner sc = new Scanner(System.in);
+        
+        int T = sc.nextInt();
+        for(int tc=1; tc<=T; tc++) {
+        	N = sc.nextInt();
+        	M = sc.nextInt();
+        	C = sc.nextInt();
+        	list = new int [N*N];
+        	calList = new int [N*N];
+        	for(int i=0; i<N*N; i++) {
+        		list[i] = sc.nextInt();
+        	}
+        	
+        	for(int i=0; i<N*N; i++) {
+        		if(i%N+M <= N) {
+        			calList[i] = calculate(i);
+        		}
+        	}
+        	
+        	max = Integer.MIN_VALUE;
+        	for(int i=0; i<N*N; i++) {
+        		if (calList[i] == 0) continue;
+        		
+        		for(int j=i+1; j<N*N; j++) {
+        			if (calList[j] == 0) continue;
+        			
+        			if(isNotOverlapped(i,j)) {
+        				max = Math.max(max, calList[i] + calList[j]);
+        			}
+        		}
+        	}
+        	
+        	System.out.println("#"+tc+" "+max);
+        }
+        
 	}
-	static Node [] t;
-    public static void main(String[] args){
-    	Scanner sc = new Scanner(System.in);
-    	int T = sc.nextInt();
-    	for(int tc=1; tc<=T; tc++) {
-    		N = sc.nextInt(); 
-    		M = sc.nextInt();
-    		C = sc.nextInt();
-    		matrix = new int [N][N];
-    		t = new Node[2];
-    		for(int r=0; r<N; r++) {
-    			for(int c=0; c<N; c++) {
-    				matrix[r][c]= sc.nextInt();
-    			}
-    		}
-    		
-    		Amax = Integer.MIN_VALUE;
-    		Bmax = Integer.MIN_VALUE;
-    		finalMax = Integer.MIN_VALUE;
-    		solve(0, 0);
-    		System.out.println("#"+tc+" "+finalMax);
-    	}
+	private static boolean isNotOverlapped(int i, int j) {
+		int r1 = i / N;
+		int r2 = j / N;
+		if(r1 != r2) return true;
+
+		return i+M <= j;
 	}
-    
-	private static void solve(int k, int s) {
-		if(k == 2) {
-			calculateHoney();
-		} else {
-			for(int i=s; i<N*N; i++) {
-				int r = i/N;
-				int c = i%N;
-				if(c>=N-M+1) continue;
-				t[k] = new Node(r, c);
-				solve(k+1, i+M);
-			}
+	
+	private static int calculate(int i) {
+		// TODO Auto-generated method stub
+		powSum = Integer.MIN_VALUE;
+		
+		comb(i, i, 0, 0, i+M);
+		
+		return powSum;
+	}
+	
+	private static void comb(int k, int s, int sum, int powSumF, int F) {
+		if(sum > C) {
+			return;
 		}
 		
-	}
-
-	private static void calculateHoney() {
-		int [] honeyA = new int [M];
-		int [] honeyB = new int [M];
-		Node curr = t[0];
-		int idx =0;
-		for(int c=curr.c; c<curr.c+M; c++) {
-			honeyA[idx] = matrix[curr.r][c];
-			idx++;
-		}
-		curr = t[1];
-		idx =0;
-		for(int c=curr.c; c<curr.c+M; c++) {
-			honeyB[idx] = matrix[curr.r][c];
-			idx++;
-		}
-		
-		Amax = maxHoney(honeyA, 0, 0, 0);
-		Bmax = maxHoney(honeyB, 0, 0, 0);
-		
-		finalMax = Math.max(finalMax, Amax + Bmax);
-	}
-
-	private static int maxHoney(int[] honey, int index, int currentSum, int powSum) {
-		if (currentSum > C) return 0; 
-
-	    if (index == honey.length) {
-	        return powSum; 
+		if (powSumF > powSum) {
+	        powSum = powSumF;
 	    }
 
-	    int selected = maxHoney(honey, index + 1, 
-	                            currentSum + honey[index], 
-	                            powSum + (honey[index] * honey[index]));
-
-	    int notSelected = maxHoney(honey, index + 1, currentSum, powSum);
-	    
-	    return Math.max(selected, notSelected);
-	}
+	    if (k == F) return;
+		
+		for(int i=s; i<F; i++) {
+			comb(k+1, i+1, sum+list[i], powSumF+list[i]*list[i], F);
+		}
+	} 
 }
-
