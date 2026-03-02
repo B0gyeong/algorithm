@@ -1,74 +1,84 @@
 import java.util.*;
 
-public class Solution {
-	static int N, M, C, powSum, max;
-	static int [] list, calList;
+public class Solution {	
+	static int N, M, C, miniSum, maxAns;
+	static int [] selected;
+	static int [][] matrix;
+	static int [] arr;
     public static void main(String args[]) throws Exception {
         Scanner sc = new Scanner(System.in);
-        
         int T = sc.nextInt();
         for(int tc=1; tc<=T; tc++) {
         	N = sc.nextInt();
         	M = sc.nextInt();
         	C = sc.nextInt();
-        	list = new int [N*N];
-        	calList = new int [N*N];
-        	for(int i=0; i<N*N; i++) {
-        		list[i] = sc.nextInt();
-        	}
+        	matrix = new int [N][N];
         	
-        	for(int i=0; i<N*N; i++) {
-        		if(i%N+M <= N) {
-        			calList[i] = calculate(i);
+        	for(int r=0; r<N; r++) {
+        		for(int c=0; c<N; c++) {
+        			matrix[r][c] = sc.nextInt();
         		}
         	}
         	
-        	max = Integer.MIN_VALUE;
-        	for(int i=0; i<N*N; i++) {
-        		if (calList[i] == 0) continue;
+        	arr = new int [N*N];
+        	for(int i=0; i<N*N-M+1; i++) {
+        		int r = i / N;
+        		int c = i % N;
         		
-        		for(int j=i+1; j<N*N; j++) {
-        			if (calList[j] == 0) continue;
-        			
-        			if(isNotOverlapped(i,j)) {
-        				max = Math.max(max, calList[i] + calList[j]);
-        			}
+        		if(c+M > N) arr[i] = 0;
+        		else {
+        			miniSum = 0;
+        			subset(i, 0, 0, i+M);
+        			arr[i] = miniSum;
         		}
-        	}
+         	}
         	
-        	System.out.println("#"+tc+" "+max);
+        	selected = new int [2];
+        	maxAns = 0;
+        	comb(0, 0);
+        	System.out.println("#"+tc+" "+maxAns);
+        	
         }
         
 	}
-	private static boolean isNotOverlapped(int i, int j) {
-		int r1 = i / N;
-		int r2 = j / N;
-		if(r1 != r2) return true;
+    
+	private static void subset(int idx, int sum, int powSum, int F) {
+		if(sum > C) return;
+		
+		if(idx == F) {
+			miniSum = Math.max(miniSum, powSum);
+			return;
+		}
+			
+		int r = idx / N;
+		int c = idx % N;
 
-		return i+M <= j;
+		subset(idx+1, sum, powSum, F);
+		subset(idx+1, sum+matrix[r][c], powSum + matrix[r][c]*matrix[r][c], F);
 	}
-	
-	private static int calculate(int i) {
-		// TODO Auto-generated method stub
-		powSum = Integer.MIN_VALUE;
-		
-		subset(i, 0, 0, i+M);
-		
-		return powSum;
-	}
-	
-	private static void subset(int idx, int sum, int powSumF, int F) {
-		if(sum > C) {
+
+	private static void comb(int idx, int start) {
+		if(idx == 2) {
+			if(check(selected[0], selected[1])) {
+				maxAns = Math.max(maxAns, arr[selected[0]] + arr[selected[1]]);
+			}
+			
 			return;
 		}
 		
-		if (powSumF > powSum) {
-	        powSum = powSumF;
-	    }
-
-	    if (idx == F) return;
+		for(int i=start; i<N*N; i++) {
+			selected[idx] = i;
+			comb(idx+1, i+1);
+		}
 		
-		subset(idx+1, sum+list[idx], powSumF+list[idx]*list[idx], F);
-		subset(idx+1, sum, powSumF, F);
-	} 
+	}
+
+	private static boolean check(int a, int b) {
+		int nr1 = a / N; int nc1 = a % N;
+		int nr2 = b / N; int nc2 = b % N;
+		
+		if(nr1 != nr2) return true;
+		
+		return nc1 + M <= nc2;
+	}
 }
