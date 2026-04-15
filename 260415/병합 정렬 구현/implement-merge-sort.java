@@ -4,12 +4,14 @@ import java.io.*;
 public class Main {
     static int [] arr;
     static int n;
+    static int [] margeArr;
     public static void main(String[] args) throws Exception{
         // Please write your code here.
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         n = Integer.parseInt(br.readLine());
         arr = new int [n];
+        margeArr = new int [n];
         StringTokenizer st = new StringTokenizer(br.readLine());
         for(int i=0; i<n; i++){
             arr[i] = Integer.parseInt(st.nextToken());
@@ -36,8 +38,6 @@ public class Main {
         int i = low;
         int j = mid+1;
         int k = low;
-
-        int [] margeArr = new int [n];
 
         while(i<=mid && j<=high){
             if(arr[i] <= arr[j]){
