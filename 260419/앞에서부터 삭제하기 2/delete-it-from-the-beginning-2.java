@@ -13,8 +13,9 @@ public class Main {
             arr[i] = Integer.parseInt(st.nextToken());
         }
 
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
         for(int k=1; k<=N-2; k++){
-            PriorityQueue<Integer> pq = new PriorityQueue<>();
+            pq.clear();
             for(int i=k; i<N; i++){
                 pq.add(arr[i]);
             }
