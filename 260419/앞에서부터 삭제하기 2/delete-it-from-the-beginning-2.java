@@ -13,20 +13,15 @@ public class Main {
             arr[i] = Integer.parseInt(st.nextToken());
         }
 
-        PriorityQueue<Integer> pq = new PriorityQueue<>();
-        for(int k=1; k<=N-2; k++){
-            pq.clear();
-            for(int i=k; i<N; i++){
-                pq.add(arr[i]);
-            }
-
-            pq.poll();
-            int sum = 0;
-            double size = pq.size();
-            while(!pq.isEmpty()){
-                sum+=pq.poll();
-            }
-            result = Math.max(result, (double) sum/size);
+        double sum = 0.0;
+        double minVal = Double.MAX_VALUE;
+        int size = 0;
+        for(int k=N-1; k>=1; k--){
+            sum+=arr[k];
+            minVal = Math.min(minVal, arr[k]);
+            size++;
+            if(size-1 == 0) continue
+            result=Math.max(result, (double) (sum-minVal) / (size-1));
         }
 
         System.out.printf("%.2f\n", result);
