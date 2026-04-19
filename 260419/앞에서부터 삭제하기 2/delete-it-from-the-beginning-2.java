@@ -20,7 +20,7 @@ public class Main {
             sum+=arr[k];
             minVal = Math.min(minVal, arr[k]);
             size++;
-            if(size-1 == 0) continue
+            if(size-1 == 0) continue;
             result=Math.max(result, (double) (sum-minVal) / (size-1));
         }
 
