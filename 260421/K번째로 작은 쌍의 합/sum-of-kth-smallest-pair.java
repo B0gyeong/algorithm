@@ -38,7 +38,7 @@ public class Main {
         if(low > high) return;
         int X = (low + high) / 2;
         int j = M-1;
-        int c = 0;
+        long c = 0;
         for(int i=0; i<N; i++){
             while(j>=0 && arrN[i]+arrM[j] > X){
                 j--;
@@ -49,11 +49,11 @@ public class Main {
             }
         }
 
-        if (c <= K) {
+        if (c >= K) {
             result = X;
-            solution(X+1, high);
-        } else {
             solution(low, X-1);
+        } else {
+            solution(X+1, high);
         }
     }
 }
