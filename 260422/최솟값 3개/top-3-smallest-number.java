@@ -8,7 +8,7 @@ public class Main {
         int N = Integer.parseInt(br.readLine());
         StringTokenizer st = new StringTokenizer(br.readLine());
         PriorityQueue<Integer> pq = new PriorityQueue<>();
-        int max = Integer.MAX_VALUE;
+        long max = Integer.MAX_VALUE;
         long result = 0;
         for(int i=0; i<N; i++){
             int num = Integer.parseInt(st.nextToken());
