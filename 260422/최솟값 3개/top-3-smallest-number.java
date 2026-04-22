@@ -8,7 +8,7 @@ public class Main {
         int N = Integer.parseInt(br.readLine());
         StringTokenizer st = new StringTokenizer(br.readLine());
         PriorityQueue<Integer> pq = new PriorityQueue<>();
-        long max = Integer.MAX_VALUE;
+        int max = Integer.MAX_VALUE;
         long result = 0;
         for(int i=0; i<N; i++){
             int num = Integer.parseInt(st.nextToken());
@@ -16,11 +16,11 @@ public class Main {
 
             if(i > 1){
                 if(max == Integer.MAX_VALUE || max > num) {
-                    long a = pq.poll();
-                    long b = pq.poll();
-                    long c = pq.poll();
+                    int a = pq.poll();
+                    int b = pq.poll();
+                    int c = pq.poll();
                     max = c;
-                    result = a*b*c;
+                    result = (long) a*b*c;
                     pq.add(a);
                     pq.add(b);
                     pq.add(c);
