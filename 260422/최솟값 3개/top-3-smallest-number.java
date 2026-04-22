@@ -16,9 +16,9 @@ public class Main {
 
             if(i > 1){
                 if(max == Integer.MAX_VALUE || max > num) {
-                    int a = pq.poll();
-                    int b = pq.poll();
-                    int c = pq.poll();
+                    long a = pq.poll();
+                    long b = pq.poll();
+                    long c = pq.poll();
                     max = c;
                     result = a*b*c;
                     pq.add(a);
