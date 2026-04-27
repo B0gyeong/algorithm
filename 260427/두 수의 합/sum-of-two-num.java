@@ -27,6 +27,7 @@ public class Main {
             int tnum = K - num;
             if(hm.containsKey(tnum)) {
                 result += hm.get(tnum);
+                if(num == tnum) result--;
             }
         }
 
