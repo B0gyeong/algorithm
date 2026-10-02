@@ -1,22 +1,22 @@
 class Solution {
-    static int n, cnt;
+    static int cnt = 0;
+    static int n, targetNum;
     public int solution(int[] numbers, int target) {
         n = numbers.length;
-        cnt = 0;
-        sol(0, 0, numbers, target);
+        targetNum = target;
+        sol(0, 0, numbers);
+
         return cnt;
     }
     
-    public void sol(int idx, int sum, int[] numbers, int target) {
-        if(idx == n) {
-            if(sum == target) {
-                cnt++;
-            }
+    public void sol(int i, int sum, int[] numbers) {
+        if(i == n) {
+            if(targetNum == sum) cnt++;
             return;
         }
         
-        sol(idx+1, sum+numbers[idx], numbers, target);
-        sol(idx+1, sum-numbers[idx], numbers, target);
+        sol(i+1, sum+numbers[i], numbers);
+        sol(i+1, sum-numbers[i], numbers);
     }
 }
 
