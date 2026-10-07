@@ -28,13 +28,12 @@ class Solution {
             String[] currArr = curr.split(" ");
             String[] hmArr = currArr[0].split(":");
             int h = Integer.parseInt(hmArr[0]);
-            int m = Integer.parseInt(hmArr[1]);
+            int m = Integer.parseInt(hmArr[1]); 
             if(currArr[2].equals("IN")) {
                 if(hm.containsKey(currArr[1])) {
                     Parking p = hm.get(currArr[1]);
                     p.h = h; p.m = m;
                     p.isDone = false;
-                    hm.put(currArr[1], p);
                 } else {
                     hm.put(currArr[1], new Parking(h, m, currArr[1]));
                 }
@@ -44,7 +43,6 @@ class Solution {
                 
                 inTime.totalT += duringT;
                 inTime.isDone = true;
-                hm.put(currArr[1], inTime);
             }
         }
         
@@ -54,7 +52,6 @@ class Solution {
                 int duringT = (23 - inTime.h)*60 + (59 - inTime.m);
                 inTime.totalT += duringT;
                 inTime.isDone = true;
-                hm.put(carNum, inTime);
             }
         }
         
@@ -64,11 +61,7 @@ class Solution {
             if(time < fees[0]) {
                 inTime.fee = fees[1];
             } else {
-                int plusT = 0;
-                plusT += (time - fees[0]) / fees[2];
-                if(((time - fees[0]) % fees[2]) != 0) {
-                    plusT++;
-                }
+                int plusT = ((time - fees[0]) + fees[2] - 1) / fees[2]; 
                 inTime.fee = fees[1] + plusT * fees[3];
             }
             pq.add(inTime);
