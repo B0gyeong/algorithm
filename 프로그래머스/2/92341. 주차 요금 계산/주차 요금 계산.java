@@ -1,52 +1,87 @@
 import java.util.*;
 
 class Solution {
-    static int[] feeList;
+    public class Parking implements Comparable<Parking> {
+        int fee, h, m, totalT;
+        String carNum;
+        boolean isDone;
+        
+        Parking(int h, int m, String carNum) {
+            this.fee = 0;
+            this.h = h;
+            this.m = m;
+            this.totalT = 0;
+            this.carNum = carNum;
+            this.isDone = false;
+        }
+        
+        @Override
+        public int compareTo(Parking o) {
+            return Integer.parseInt(this.carNum) - Integer.parseInt(o.carNum);
+        }
+    }
     public int[] solution(int[] fees, String[] records) {
-        feeList = fees;
-        HashMap<String, Integer> hm = new HashMap<>();
-        HashMap<String, Integer> timeMap = new HashMap<>();
+        HashMap<String, Parking> hm = new HashMap<>();
+        PriorityQueue<Parking> pq = new PriorityQueue<>();
+        
         for(String curr : records) {
-            StringTokenizer st = new StringTokenizer(curr);
-            String time = st.nextToken();
-            String num = st.nextToken();
-            String type = st.nextToken();
-            
-            String[] timeSplit = time.split(":");
-            int h = Integer.parseInt(timeSplit[0]);
-            int m = Integer.parseInt(timeSplit[1]);
-            int sumM = h * 60 + m;
-    
-            if(type.equals("IN")) {
-                hm.put(num, sumM);
+            String[] currArr = curr.split(" ");
+            String[] hmArr = currArr[0].split(":");
+            int h = Integer.parseInt(hmArr[0]);
+            int m = Integer.parseInt(hmArr[1]);
+            if(currArr[2].equals("IN")) {
+                if(hm.containsKey(currArr[1])) {
+                    Parking p = hm.get(currArr[1]);
+                    p.h = h; p.m = m;
+                    p.isDone = false;
+                    hm.put(currArr[1], p);
+                } else {
+                    hm.put(currArr[1], new Parking(h, m, currArr[1]));
+                }
             } else {
-                int startM = hm.remove(num);
-                int duringM = sumM - startM;
-                timeMap.put(num, timeMap.getOrDefault(num, 0) + duringM);
+                Parking inTime = hm.get(currArr[1]);
+                int duringT = (h - inTime.h)*60 + (m - inTime.m);
+                
+                inTime.totalT += duringT;
+                inTime.isDone = true;
+                hm.put(currArr[1], inTime);
             }
         }
         
-        for(String key : hm.keySet()) {
-            int startM = hm.get(key);
-            int endM = 23 * 60 + 59;
-            int duringM = endM - startM;
-            timeMap.put(key, timeMap.getOrDefault(key, 0) + duringM);
+        for(String carNum : hm.keySet()) {
+            Parking inTime = hm.get(carNum);
+            if(!inTime.isDone) {
+                int duringT = (23 - inTime.h)*60 + (59 - inTime.m);
+                inTime.totalT += duringT;
+                inTime.isDone = true;
+                hm.put(carNum, inTime);
+            }
         }
         
-        List<String> finalList = new ArrayList<>(timeMap.keySet());
-        Collections.sort(finalList);
-        
-        int[] answer = new int[finalList.size()];
-        for(int i=0; i<finalList.size(); i++) {
-            answer[i] = calPrice(timeMap.get(finalList.get(i)));
+        for(String carNum : hm.keySet()) {
+            Parking inTime = hm.get(carNum);
+            int time = inTime.totalT;
+            if(time < fees[0]) {
+                inTime.fee = fees[1];
+            } else {
+                int plusT = 0;
+                plusT += (time - fees[0]) / fees[2];
+                if(((time - fees[0]) % fees[2]) != 0) {
+                    plusT++;
+                }
+                inTime.fee = fees[1] + plusT * fees[3];
+            }
+            pq.add(inTime);
         }
+        
+        int n = pq.size();
+        int answer[] = new int[n];
+        for(int i=0; i<n; i++) {
+            Parking p = pq.poll();
+            answer[i] = p.fee;
+        }
+        
         return answer;
     }
-    public int calPrice(int sumM) {
-        if(sumM <= feeList[0]) {
-            return feeList[1];
-        } else {
-            return feeList[1] + (int) Math.ceil((double)(sumM - feeList[0]) / feeList[2]) * feeList[3];
-        }
-    }
-}
+    
+} 
