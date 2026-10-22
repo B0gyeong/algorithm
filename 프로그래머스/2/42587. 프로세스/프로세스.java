@@ -2,36 +2,41 @@ import java.util.*;
 
 class Solution {
     static class Node {
-        int priority, index;
+        int prior, ind;
         
-        Node(int priority, int index) {
-            this.priority = priority;
-            this.index = index;
+        Node(int prior, int ind) {
+            this.prior = prior;
+            this.ind = ind;
         }
     }
+    
     public int solution(int[] priorities, int location) {
-        Queue<Node> q = new LinkedList<>();
         PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
-        
+        Queue<Node> q = new LinkedList<>();
         int n = priorities.length;
         for(int i=0; i<n; i++) {
-            q.offer(new Node(priorities[i], i));
-            pq.offer(priorities[i]);
+            pq.add(priorities[i]);
+            q.add(new Node(priorities[i], i));
         }
         
-        int cnt=0;
-        while(!q.isEmpty()) {
-            Node curr = q.poll();
-            if(curr.priority < pq.peek()) {
-                q.offer(curr);
-            } else {
-                pq.poll();
-                cnt++;
-                if(curr.index == location) return cnt;
+        int cnt = 0;
+        while(!pq.isEmpty()) {
+            int baseP = pq.poll();
+            while(true) {
+                Node temp = q.poll();
+                if(temp.prior == baseP) {
+                    cnt++;
+                    if(temp.ind == location) {
+                        return cnt;
+                    } else {
+                        break;
+                    }
+                } else {
+                    q.add(temp);
+                }
             }
         }
         
-        int answer = 0;
-        return answer;
+        return cnt;
     }
 }
