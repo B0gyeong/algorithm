@@ -1,50 +1,42 @@
 import java.util.*;
 
 class Solution {
-    public class Node {
-        int pro, speed;
-        
-        Node(int pro, int speed) {
-            this.pro = pro;
-            this.speed = speed;
-        }
-    }
-    
     public int[] solution(int[] progresses, int[] speeds) {
-        int N = progresses.length;
-        Queue<Node> q = new LinkedList<>();
-        
-        for(int i=0; i<N; i++) {
-            q.offer(new Node(progresses[i], speeds[i]));
+        Queue<Integer> q = new LinkedList<>();
+        int n = progresses.length;
+        for(int i=0; i<n; i++) {
+            int day = (99-progresses[i])/speeds[i]+1;
+            q.add(day);
         }
         
-        ArrayList<Integer> answer = new ArrayList<>();
-        
+        int base = -1;
+        int cnt = 0;
+        LinkedList<Integer> ans = new LinkedList<>();
         while(!q.isEmpty()) {
-            Node curr = q.poll();
-            int pro = curr.pro;
-            int s = curr.speed;
-            
-            int d;
-            if((100-pro)%s == 0) {
-                d = (100-pro)/s;
-            } else {
-                d = (100-pro)/s + 1;
-            }
-            
-            int cnt = 1;
+            base = q.poll();
+            cnt = 1;
             while(!q.isEmpty()) {
-                Node next = q.peek();
-                if(next.pro + (next.speed * d) >= 100) {
+                if(q.peek() <= base) {
                     cnt++;
                     q.poll();
+                } else {
+                    ans.add(cnt);
+                    base = -1;
+                    break;
                 }
-                else break;
             }
-            answer.add(cnt);
+        }
+        if(base != -1) {
+            ans.add(cnt);
         }
         
-        int[] arrans = answer.stream().mapToInt(Integer::intValue).toArray();
-        return arrans;
+        int ansN = ans.size();
+        int[] ansList = new int[ansN];
+        for(int i=0; i<ansN; i++) {
+            ansList[i] = ans.get(i);
+        }
+        
+        return ansList;
     }
+    
 }
