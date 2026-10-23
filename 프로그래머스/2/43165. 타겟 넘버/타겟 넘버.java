@@ -1,22 +1,26 @@
 class Solution {
-    static int cnt = 0;
-    static int n, targetNum;
+    static int answer, n;
     public int solution(int[] numbers, int target) {
         n = numbers.length;
-        targetNum = target;
-        sol(0, 0, numbers);
-
-        return cnt;
+        answer = 0;
+        
+        dfs(0, 0, target, numbers);
+        
+        return answer;
+        
     }
     
-    public void sol(int i, int sum, int[] numbers) {
-        if(i == n) {
-            if(targetNum == sum) cnt++;
+    public void dfs(int idx, int sum, int target, int[] numbers) {
+        if(idx==n) {
+            if(sum == target) {
+                answer++;
+            }
             return;
         }
         
-        sol(i+1, sum+numbers[i], numbers);
-        sol(i+1, sum-numbers[i], numbers);
+        dfs(idx+1, sum+numbers[idx], target, numbers);
+        dfs(idx+1, sum-numbers[idx], target, numbers);
     }
+    
 }
 
