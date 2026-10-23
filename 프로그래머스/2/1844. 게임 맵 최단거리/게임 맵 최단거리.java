@@ -2,45 +2,48 @@ import java.util.*;
 import java.io.*;
 
 class Solution {
-    int[] dx = {-1, 1, 0, 0};
-    int[] dy = { 0, 0, -1, 1};
-    
+    int dx[] = {-1, 1, 0, 0};
+    int dy[] = {0, 0, -1, 1};
     static class Node {
-        int x, y, d;
+        int x, y, dist;
         
-        Node(int x, int y, int d) {
+        Node(int x, int y, int dist) {
             this.x = x;
             this.y = y;
-            this.d = d;
+            this.dist = dist;
         }
     }
     
     public int solution(int[][] maps) {
         int n = maps.length;
         int m = maps[0].length;
-        boolean[][] visited = new boolean[n][m];
+        int answer = -1;
         
         Queue<Node> q = new LinkedList<>();
-        q.offer(new Node(0,0,0));
+        boolean[][] visited = new boolean[n][m];
+        q.add(new Node(0,0,0));
         visited[0][0] = true;
         
         while(!q.isEmpty()) {
             Node curr = q.poll();
-            int cx = curr.x;
-            int cy = curr.y;
+            
+            if(curr.x == n-1 && curr.y == m-1) {
+                answer = curr.dist+1;
+                break;
+            }
             
             for(int d=0; d<4; d++) {
-                int nx = cx + dx[d];
-                int ny = cy + dy[d]; 
+                int nx = curr.x + dx[d];
+                int ny = curr.y + dy[d];
                 
-                if((nx<0 || nx>=n || ny<0 || ny>=m) || maps[nx][ny] == 0 || visited[nx][ny]) continue;
-                if(nx == n-1 && ny == m-1) return curr.d + 2;
+                if(nx<0 || nx>=n || ny<0 || ny>=m) continue;
+                if(maps[nx][ny]==0 || visited[nx][ny]) continue;
                 
-                q.offer(new Node(nx, ny, curr.d+1));
+                q.add(new Node(nx, ny, curr.dist+1));
                 visited[nx][ny] = true;
             }
         }
         
-        return -1;
+        return answer;
     }
 }
