@@ -7,25 +7,19 @@ class Solution {
         int n = dungeons.length;
         boolean[] visited = new boolean[n];
         
-        dfs(0, k, 0, n, visited, dungeons);
+        dfs(k, 0, visited, dungeons);
         
         return answer;
     }
     
-    public void dfs(int idx, int p, int cnt, int n, boolean[] visited, int[][] dungeons) {
-        if(idx == n) {
-            answer = Math.max(answer, cnt);
-            return;
-        }
+    public void dfs(int p, int cnt, boolean[] visited, int[][] dungeons) {
+        answer = Math.max(answer, cnt);
         
+        int n = visited.length;
         for(int i=0; i<n; i++) {
-            if(!visited[i]) {
+            if(!visited[i] && dungeons[i][0] <= p) {
                 visited[i] = true;
-                if(dungeons[i][0] <= p) {
-                    dfs(idx+1, p-dungeons[i][1], cnt+1, n, visited, dungeons);
-                } else {
-                    dfs(idx+1, p, cnt, n, visited, dungeons);
-                }
+                dfs(p-dungeons[i][1], cnt+1, visited, dungeons);
                 visited[i] = false;
             }
         }
